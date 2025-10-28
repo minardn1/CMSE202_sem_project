@@ -6,3 +6,6 @@
   - Noah
 - Group Roles: ...
 
+- Model:
+  - Logistic regression
+  - Nueral Network
