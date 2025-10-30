@@ -4,8 +4,11 @@
   - Subaj
   - Lewi
   - Noah
-- Group Roles: ...
-
-- Model:
+- Group Roles:
+  - Models: Lewi
+  - Data: Joel
+  - Presentation & Report: Noah
+  - Evaluation of Model: 
+- Models:
   - Logistic regression
   - Nueral Network
