@@ -12,3 +12,6 @@ Three Project Goals:
 1. Logistic Model and Neural Network Model should be completed by November 9th
 2. AI Evaluation should be completed by November 16th
 3. Presentation should be done the 23rd, with checkpoints ahead of time for each part.
+
+First Meeting Time:
+11:40 am, November 11th, 2025. We'll talk about current progression and if models are done.
