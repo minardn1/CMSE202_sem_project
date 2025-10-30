@@ -12,3 +12,6 @@
 - Models:
   - Logistic regression
   - Nueral Network
+
+Main dataset link:
+https://www.kaggle.com/datasets/rabieelkharoua/predicting-hiring-decisions-in-recruitment-data/data
