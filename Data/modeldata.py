@@ -4,10 +4,11 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as snsfrom 
+import seaborn as sns
 from sklearn.model_selection import train_test_split
 import statsmodels.api as sm
 from sklearn import metrics
+from sklearn.metrics import accuracy_score
 
 # ---------- Load and Preprocess Data ----------
 
@@ -52,13 +53,17 @@ def split_data(data, test_size=0.2, random_state=42):
     Returns:
     X_train, X_test, y_train, y_test = training and testing sets 
     """
-    X = data.drop('Hiring Decision', axis=1) # feature(s)
-    y = data['Hiring Decision'] # target variable
+    X = data.drop('HiringDecision', axis=1) # feature(s)
+    y = data['HiringDecision'] # target variable
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
     return X_train, X_test, y_train, y_test
 
 # ---------- Temporary Test Code ----------
-split_data(data, test_size, random_state)
+data = clean_load_data('Data/recruitment_data.csv')
+X_train, X_test, y_train, y_test = split_data(data)
 logit_model = sm.Logit(y_train, sm.add_constant(X_train))
 result = logit_model.fit()
 print(result.summary())
+
+accuracy = accuracy_score(y_test, result.predict(sm.add_constant(X_test)).round())
+print(f'The Linear Regression Model has accuracy: {accuracy} %')
