@@ -135,39 +135,6 @@ def see_data(data):
     plt.legend(title='Hiring Decision', labels=['Not Hired', 'Hired'])
     plt.show()
 
-# ---------- ... ----------
-
-
-
-# ---------- Run the Code ----------
+# ---------- Run Code ----------
 data = clean_data('Data/recruitment_data.csv') # loads and cleans the data
-#see_data(data)
-
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.svm import SVC
-
-def compare_models(X_train, X_test, y_train, y_test):
-    models = {
-        "Logistic Regression": sm.Logit(y_train, sm.add_constant(X_train)).fit(),
-        "Decision Tree": DecisionTreeClassifier(random_state=42),
-        "Random Forest": RandomForestClassifier(random_state=42),
-        "SVM": SVC(kernel='linear', random_state=42)
-    }
-
-    results = {}
-    for name, model in models.items():
-        if name == "Logistic Regression":
-            y_pred = model.predict(sm.add_constant(X_test)).round()
-        else:
-            model.fit(X_train, y_train)
-            y_pred = model.predict(X_test)
-        results[name] = accuracy_score(y_test, y_pred)
-
-    print("\nModel Accuracy Comparison:")
-    for model, acc in results.items():
-        print(f"{model}: {acc:.3f}")
-
-    return results
-X_train, X_test, y_train, y_test = split_data(data)
-compare_models(X_train, X_test, y_train, y_test)
+see_data(data)
