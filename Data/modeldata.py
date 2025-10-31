@@ -12,7 +12,7 @@ from sklearn.metrics import accuracy_score
 
 # ---------- Load and Preprocess Data ----------
 
-def clean_load_data(path):
+def clean_data(path):
     """
     Loads and cleans the recruitment data from kaggle
     Data Source:https://www.kaggle.com/datasets/rabieelkharoua/predicting-hiring-decisions-in-recruitment-data/data
@@ -43,6 +43,7 @@ def clean_load_data(path):
     return data
 
 # ---------- Split Data into Training and Testing Sets ----------
+
 def split_data(data, test_size=0.2, random_state=42):
     """
     Splits the recruitment data into training and testing sets
@@ -53,17 +54,120 @@ def split_data(data, test_size=0.2, random_state=42):
     Returns:
     X_train, X_test, y_train, y_test = training and testing sets 
     """
+    data = clean_data('Data/recruitment_data.csv') # loads and cleans the data
     X = data.drop('HiringDecision', axis=1) # feature(s)
     y = data['HiringDecision'] # target variable
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
     return X_train, X_test, y_train, y_test
 
-# ---------- Temporary Test Code ----------
-data = clean_load_data('Data/recruitment_data.csv')
-X_train, X_test, y_train, y_test = split_data(data)
-logit_model = sm.Logit(y_train, sm.add_constant(X_train))
-result = logit_model.fit()
-print(result.summary())
+# ---------- Test Data ----------
 
-accuracy = accuracy_score(y_test, result.predict(sm.add_constant(X_test)).round())
-print(f'The Linear Regression Model has accuracy: {accuracy} %')
+def test_data():
+    """
+    Briefly tests the data by fitting it into a logistic regression model and evaluating the accuracy score
+    Purpose:
+    To make sure that the data is properly cleaned and can be used for models
+    To check if the features have a significant relationship with the target variable (Hiring Decision)
+    """
+    data = clean_data('Data/recruitment_data.csv')
+    X_train, X_test, y_train, y_test = split_data(data)
+    logit_model = sm.Logit(y_train, sm.add_constant(X_train))
+    result = logit_model.fit()
+    print(result.summary())
+
+    accuracy = accuracy_score(y_test, result.predict(sm.add_constant(X_test)).round())
+    print(f'The Linear Regression Model has accuracy: {accuracy}')
+
+# ---------- Data Visualization ----------
+
+def see_data(data):
+    """
+    Visualizes data to better understand the nature and distribution of the features and target variable
+    Purpose:
+    Identify patterns and relationships between features and target variable(s)
+    Potentially see if data is linearly separable for model selection
+    Input:
+    data = cleaned pandas dataframe
+    Returns:
+    None (plots)
+    """
+    data = clean_data('Data/recruitment_data.csv') # loads and cleans the data
+    data.head() # returns head of data
+    data.describe() # describes data
+    data.info() # info about data
+    
+    # Identify correlations between features and target variable
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(data.corr(), annot=True, cmap='magma')
+    plt.title('Correlation Heatmap of Recruitment Data')
+    plt.show()
+
+    # Distribution of target variable (Hiring Decision)
+    plt.figure(figsize=(10, 8))
+    sns.countplot(x='HiringDecision', data=data, color='crimson')
+    plt.title('Distribution of Hiring Decisions')
+    plt.xlabel('Hiring Decision (0 = Not Hired, 1 = Hired)')
+    plt.ylabel('Count')
+    plt.show()
+
+    # Distribution of Age
+    plt.figure(figsize=(10, 8))
+    sns.histplot(data['Age'], bins=30, kde=True, color='blue')
+    plt.title('Applicant Age Distribution')
+    plt.xlabel('Age (years)')
+    plt.ylabel('Count')
+    plt.show()
+
+    # Distribution of Experience Years
+    plt.figure(figsize=(10, 8))
+    sns.histplot(data['ExperienceYears'], bins=30, kde=True, color='blue')
+    plt.title('Applicant Experience Level Distribution')
+    plt.xlabel('Experience Years')
+    plt.ylabel('Count')
+    plt.show()
+
+    # Hiring Decision by Education Level
+    plt.figure(figsize=(10, 8))
+    sns.countplot(x='EducationLevel', hue='HiringDecision', data=data)
+    plt.title('Hiring Decision by Education Level')
+    plt.xlabel('Education Level (1 = Bachelors(Type1), 2 = Bachelors(Type2), 3 = Masters, 4 = PhD)')
+    plt.ylabel('Count')
+    plt.legend(title='Hiring Decision', labels=['Not Hired', 'Hired'])
+    plt.show()
+
+# ---------- ... ----------
+
+
+
+# ---------- Run the Code ----------
+data = clean_data('Data/recruitment_data.csv') # loads and cleans the data
+#see_data(data)
+
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVC
+
+def compare_models(X_train, X_test, y_train, y_test):
+    models = {
+        "Logistic Regression": sm.Logit(y_train, sm.add_constant(X_train)).fit(),
+        "Decision Tree": DecisionTreeClassifier(random_state=42),
+        "Random Forest": RandomForestClassifier(random_state=42),
+        "SVM": SVC(kernel='linear', random_state=42)
+    }
+
+    results = {}
+    for name, model in models.items():
+        if name == "Logistic Regression":
+            y_pred = model.predict(sm.add_constant(X_test)).round()
+        else:
+            model.fit(X_train, y_train)
+            y_pred = model.predict(X_test)
+        results[name] = accuracy_score(y_test, y_pred)
+
+    print("\nModel Accuracy Comparison:")
+    for model, acc in results.items():
+        print(f"{model}: {acc:.3f}")
+
+    return results
+X_train, X_test, y_train, y_test = split_data(data)
+compare_models(X_train, X_test, y_train, y_test)
