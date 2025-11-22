@@ -1,7 +1,7 @@
 # CMSE202 Semester Project
 - Group Members:
   - Joel
-  - Subaj
+  - Subash
   - Lewi
   - Noah
 - Group Roles:
