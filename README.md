@@ -5,13 +5,14 @@
   - Lewi
   - Noah
 - Group Roles:
-  - Models: Lewi
-  - Data: Joel
-  - Presentation & Report: Noah
-  - Evaluation of Model: 
+  - Neural Network Model: Lewi
+  - Logistic Regression Model: Subash
+  - Data Cleaning and Splitting: Joel
+  - Presentation & Report, Testing Popular LLMs: Noah
 - Models:
   - Logistic regression
   - Nueral Network
+  - Popular LLMs
 
 Main dataset link:
 https://www.kaggle.com/datasets/rabieelkharoua/predicting-hiring-decisions-in-recruitment-data/data
